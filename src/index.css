@@ -16,4 +16,10 @@ code {
   --spacing-0: 0;
   --spacing-1: 8px;
   --spacing-2: 16px;
+  --outline-color: rgba(0, 115, 230, 0.4);
+  --primary-color: rgba(46, 214, 56, 1);
+}
+
+* {
+  outline-color: var(--outline-color);
 }

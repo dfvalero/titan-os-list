@@ -32,10 +32,12 @@ function App() {
                 id="collection"
                 items={data.collection}
                 navigation={true}
-                renderItem={(item) => (
+                renderItem={(item, itemState) => (
                     <ListItem
                         title={item.title}
                         image={item.images === null ? undefined : item.images.artwork_portrait}
+                        focused={itemState.wrapperFocused}
+                        selected={itemState.selected}
                     />
                 )}
             />

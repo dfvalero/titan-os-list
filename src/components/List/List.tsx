@@ -1,12 +1,18 @@
-import { ReactNode, useMemo, useRef, useState } from 'react';
+import { KeyboardEvent, ReactNode, useMemo, useRef, useState } from 'react';
 import classes from './List.module.css';
 import Navigation from 'components/List/Navigation/Navigation';
+import { Keys } from 'utils/constants';
+
+type ItemState = {
+    wrapperFocused: boolean;
+    selected: boolean;
+};
 
 type ListProps<T> = {
     id: string;
     items: T[];
     navigation?: boolean;
-    renderItem: (item: T) => ReactNode;
+    renderItem: (item: T, itemState: ItemState) => ReactNode;
 };
 
 const List = <T extends { id: string | number }>({
@@ -16,6 +22,7 @@ const List = <T extends { id: string | number }>({
     renderItem,
 }: ListProps<T>) => {
     const listRef = useRef<HTMLUListElement>(null);
+    const [focused, setFocused] = useState(false);
     const [selected, setSelected] = useState(0);
     const position = useMemo(() => {
         let result = 0;
@@ -50,18 +57,39 @@ const List = <T extends { id: string | number }>({
         });
     };
 
+    const handleKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
+        if (event.key === Keys.Right) {
+            moveNext();
+            return;
+        }
+        if (event.key === Keys.Left) {
+            movePrev();
+            return;
+        }
+    };
+
     return (
         <>
             {navigation && <Navigation listId={id} onPrev={movePrev} onNext={moveNext} />}
             <div className={classes.wrapper}>
                 <ul
+                    id={id}
+                    onKeyDown={handleKeyDown}
                     className={classes.list}
+                    tabIndex={0}
                     ref={listRef}
                     style={{ transform: `translate3d(-${position}px, 0px, 0px)` }}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
                 >
-                    {items.map((item) => (
+                    {items.map((item, index) => (
                         <li key={item.id}>
-                            <>{renderItem(item)}</>
+                            <>
+                                {renderItem(item, {
+                                    selected: selected === index,
+                                    wrapperFocused: focused,
+                                })}
+                            </>
                         </li>
                     ))}
                 </ul>

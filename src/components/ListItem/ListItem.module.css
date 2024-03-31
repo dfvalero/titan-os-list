@@ -4,6 +4,14 @@
     padding: 2px;
 }
 
+.selected {
+    border: 2px solid var(--primary-color);
+}
+
+.selected-and-focused {
+    border: 2px solid var(--outline-color);
+}
+
 .image {
     display: block;
     border-radius: 4px;
