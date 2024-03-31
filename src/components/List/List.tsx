@@ -87,6 +87,8 @@ const List = <T extends { id: string | number }>({
             <div className={classes.wrapper}>
                 <ul
                     id={id}
+                    data-testid={id}
+                    data-selected={selected}
                     onKeyDown={handleKeyDown}
                     className={classes.list}
                     tabIndex={0}
