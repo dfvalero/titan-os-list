@@ -25,13 +25,13 @@ function App() {
         });
     }, []);
 
-    console.log(data);
-
     return (
         <Main>
             <h1>Titan OS - List</h1>
             <List
+                id="collection"
                 items={data.collection}
+                navigation={true}
                 renderItem={(item) => (
                     <ListItem
                         title={item.title}

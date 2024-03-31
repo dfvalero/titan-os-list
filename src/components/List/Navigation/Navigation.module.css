@@ -1,0 +1,16 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-1);
+}
+
+.button {
+    cursor: pointer;
+}
+
+.icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
