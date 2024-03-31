@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import classes from './List.module.css';
 import Navigation from 'components/List/Navigation/Navigation';
 
@@ -15,19 +15,50 @@ const List = <T extends { id: string | number }>({
     navigation = false,
     renderItem,
 }: ListProps<T>) => {
+    const listRef = useRef<HTMLUListElement>(null);
+    const [selected, setSelected] = useState(0);
+    const position = useMemo(() => {
+        let result = 0;
+        const listStyles = listRef.current && window.getComputedStyle(listRef.current);
+        const gapSize = listStyles?.gap ?? '0px';
+        const numericGapSize = Number(gapSize.replace('px', ''));
+        const liElements = Array.from(listRef.current?.children ?? []);
+
+        Array.from(Array(selected).keys()).forEach((index) => {
+            const width = liElements[index].getBoundingClientRect().width ?? 0;
+            result = result + width;
+        });
+
+        result = result + numericGapSize * selected;
+
+        return result;
+    }, [selected]);
+
     const movePrev = () => {
-        console.log('prev');
+        setSelected((prevState) => {
+            if (prevState === 0) return items.length - 1;
+
+            return prevState - 1;
+        });
     };
 
     const moveNext = () => {
-        console.log('next');
+        setSelected((prevState) => {
+            if (prevState === items.length - 1) return 0;
+
+            return prevState + 1;
+        });
     };
 
     return (
         <>
             {navigation && <Navigation listId={id} onPrev={movePrev} onNext={moveNext} />}
             <div className={classes.wrapper}>
-                <ul className={classes.list}>
+                <ul
+                    className={classes.list}
+                    ref={listRef}
+                    style={{ transform: `translate3d(-${position}px, 0px, 0px)` }}
+                >
                     {items.map((item) => (
                         <li key={item.id}>
                             <>{renderItem(item)}</>
