@@ -3,6 +3,7 @@ import { getGenreContents } from './api';
 import Main from './components/Main/Main';
 import List from './components/List/List';
 import { GetGenreContentsResponse } from './api/types';
+import ListItem from './components/ListItem/ListItem';
 
 function App() {
     const [data, setData] = useState<GetGenreContentsResponse>({
@@ -32,13 +33,10 @@ function App() {
             <List
                 items={data.collection}
                 renderItem={(item) => (
-                    <div>
-                        <div>{item.title}</div>
-                        <img
-                            src={item.images === null ? undefined : item.images.artwork_portrait}
-                            alt={item.title}
-                        />
-                    </div>
+                    <ListItem
+                        title={item.title}
+                        image={item.images === null ? undefined : item.images.artwork_portrait}
+                    />
                 )}
             />
         </Main>

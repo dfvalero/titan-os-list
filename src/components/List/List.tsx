@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import classes from './List.module.css';
 
 type ListProps<T> = {
     items: T[];
@@ -7,12 +8,14 @@ type ListProps<T> = {
 
 const List = <T extends { id: string | number }>({ items, renderItem }: ListProps<T>) => {
     return (
-        <div>
-            {items.map((item) => (
-                <li key={item.id}>
-                    <>{renderItem(item)}</>
-                </li>
-            ))}
+        <div className={classes.wrapper}>
+            <ul className={classes.list}>
+                {items.map((item) => (
+                    <li key={item.id}>
+                        <>{renderItem(item)}</>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
