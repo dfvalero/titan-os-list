@@ -1,3 +1,13 @@
+type GenreId = string;
+
+export type GetGenreContentsParams = {
+    id: GenreId;
+    params: {
+        page: number;
+        itemsPerPage: number;
+    };
+};
+
 type GenreContentImages = {
     artwork_portrait: string;
 };

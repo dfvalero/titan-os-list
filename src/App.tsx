@@ -1,36 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { getGenreContents } from './api';
+import React, { useState } from 'react';
+import { useGetGenreContentsQuery } from 'api';
 import Main from './components/Main/Main';
 import List from './components/List/List';
-import { GetGenreContentsResponse } from './api/types';
 import ListItem from './components/ListItem/ListItem';
 
 function App() {
-    const [data, setData] = useState<GetGenreContentsResponse>({
-        collection: [],
-        pagination: {
-            count: 0,
-            current_page: 0,
-            next_page: null,
-            per_page: 20,
-            prev_page: null,
-            total_count: 0,
-            total_pages: 0,
-        },
+    const [page, setPage] = useState(1);
+    const { data, isError } = useGetGenreContentsQuery({
+        id: '9',
+        params: { page, itemsPerPage: 20 },
     });
 
-    useEffect(() => {
-        getGenreContents().then((data) => {
-            setData(data);
-        });
-    }, []);
+    if (isError) {
+        return <div>Error</div>;
+    }
 
     return (
         <Main>
             <h1>Titan OS - List</h1>
             <List
                 id="collection"
-                items={data.collection}
+                items={data?.collection ?? []}
                 navigation={true}
                 renderItem={(item, itemState) => (
                     <ListItem
