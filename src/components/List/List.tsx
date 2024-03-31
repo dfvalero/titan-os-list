@@ -1,4 +1,4 @@
-import { KeyboardEvent, ReactNode, useMemo, useRef, useState } from 'react';
+import { KeyboardEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import classes from './List.module.css';
 import Navigation from 'components/List/Navigation/Navigation';
 import { Keys } from 'utils/constants';
@@ -12,14 +12,18 @@ type ListProps<T> = {
     id: string;
     items: T[];
     navigation?: boolean;
+    threshold?: number;
     renderItem: (item: T, itemState: ItemState) => ReactNode;
+    onReachEnd?: () => void;
 };
 
 const List = <T extends { id: string | number }>({
     id,
     items,
     navigation = false,
+    threshold = 1,
     renderItem,
+    onReachEnd,
 }: ListProps<T>) => {
     const listRef = useRef<HTMLUListElement>(null);
     const [focused, setFocused] = useState(false);
@@ -40,6 +44,15 @@ const List = <T extends { id: string | number }>({
 
         return result;
     }, [selected]);
+
+    useEffect(() => {
+        const quantity = items.length - 1;
+        const limit = quantity - threshold;
+
+        if (selected === limit) {
+            onReachEnd && onReachEnd();
+        }
+    }, [items.length, threshold, onReachEnd, selected]);
 
     const movePrev = () => {
         setSelected((prevState) => {

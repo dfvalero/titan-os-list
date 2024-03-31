@@ -15,12 +15,20 @@ function App() {
         return <div>Error</div>;
     }
 
+    const handleReachEnd = () => {
+        setPage((prevState) => {
+            if (data?.pagination.next_page === null) return prevState;
+            return prevState + 1;
+        });
+    };
+
     return (
         <Main>
             <h1>Titan OS - List</h1>
             <List
                 id="collection"
                 items={data?.collection ?? []}
+                threshold={4}
                 navigation={true}
                 renderItem={(item, itemState) => (
                     <ListItem
@@ -30,6 +38,7 @@ function App() {
                         selected={itemState.selected}
                     />
                 )}
+                onReachEnd={handleReachEnd}
             />
         </Main>
     );
