@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { getGenreContents } from './api';
 import Main from './components/Main/Main';
+import List from './components/List/List';
+import { GetGenreContentsResponse } from './api/types';
 
 function App() {
-    const [data, setData] = useState<unknown>([]);
+    const [data, setData] = useState<GetGenreContentsResponse>({
+        collection: [],
+        pagination: {
+            count: 0,
+            current_page: 0,
+            next_page: null,
+            per_page: 20,
+            prev_page: null,
+            total_count: 0,
+            total_pages: 0,
+        },
+    });
 
     useEffect(() => {
         getGenreContents().then((data) => {
-            setData(data.collection);
+            setData(data);
         });
     }, []);
 
@@ -16,6 +29,18 @@ function App() {
     return (
         <Main>
             <h1>Titan OS - List</h1>
+            <List
+                items={data.collection}
+                renderItem={(item) => (
+                    <div>
+                        <div>{item.title}</div>
+                        <img
+                            src={item.images === null ? undefined : item.images.artwork_portrait}
+                            alt={item.title}
+                        />
+                    </div>
+                )}
+            />
         </Main>
     );
 }
